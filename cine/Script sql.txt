@@ -1,0 +1,46 @@
+CREATE TABLE administradores (
+    id        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    nombre    VARCHAR(100) NOT NULL,
+    username  VARCHAR(50)  NOT NULL,
+    password  VARCHAR(255) NOT NULL, 
+    correo    VARCHAR(120) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT uq_admin_username UNIQUE (username)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE salas (
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    codigo     VARCHAR(30)  NOT NULL,
+    nombre     VARCHAR(100) NOT NULL,
+    capacidad  INT UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT uq_sala_codigo UNIQUE (codigo),
+) ENGINE=InnoDB;
+
+
+CREATE TABLE peliculas (
+    id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    codigo        VARCHAR(30)  NOT NULL,
+    nombre        VARCHAR(150) NOT NULL,
+    clasificacion ENUM('TP','7','12','15','18') NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT uq_pelicula_codigo UNIQUE (codigo)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE funciones (
+    id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    codigo       VARCHAR(30)  NOT NULL,
+    id_sala      INT UNSIGNED NOT NULL,
+    id_pelicula  INT UNSIGNED NOT NULL,
+    fecha_hora   DATETIME     NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT uq_funcion_codigo UNIQUE (codigo),
+    CONSTRAINT fk_funcion_sala
+        FOREIGN KEY (id_sala) REFERENCES salas (id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_funcion_pelicula
+        FOREIGN KEY (id_pelicula) REFERENCES peliculas (id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
